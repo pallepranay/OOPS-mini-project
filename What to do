@@ -1,6 +1,6 @@
 #Make sure to inform in whatsapp group which part you are doing.
 
-1) classes for Customer , Cars , rental table. Rental class being abstract.
+1) classes for Customer , Cars , rental table. Cars class being abstract.
 
 2) function to take input data from user and insert into Customer table, providing user with a unique Cust_id
     input format in cmd line will be   ->  java Main -register <name> <address> <mobile no>
