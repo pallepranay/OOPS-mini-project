@@ -4,7 +4,57 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
 import java.util.Scanner;
+abstract class car{
+    String car_no;
+    String model;
+    int avalability;
+    int charges;
 
+    public car(String car_no, String model, int avalability, int charges) {
+        this.car_no = car_no;
+        this.model = model;
+        this.avalability = avalability;
+        this.charges = charges;
+    }
+    public abstract void discount();
+}
+class discountCar extends car{
+    public discountCar(String car_no, String model, int avalability, int charges) {
+        super(car_no, model, avalability, charges);
+    }
+
+    public void discount(){
+        charges = charges/2;
+    }
+}
+
+class customer{
+    int cust_id;
+    String name;
+    String address;
+    String phone_no;
+
+    public customer(int cust_id, String name, String address, String phone_no) {
+        this.cust_id = cust_id;
+        this.name = name;
+        this.address = address;
+        this.phone_no = phone_no;
+    }
+}
+class rental{
+    int cust_id;
+    String car_no;
+    String start;
+    String end;
+    int total_fee;
+
+    public rental(int cust_id, String car_no, String start, String end) {
+        this.cust_id = cust_id;
+        this.car_no = car_no;
+        this.start = start;
+        this.end = end;
+    }
+}
 class ConnectionFactory {
     public static Connection createConnection() throws ClassNotFoundException, SQLException {
         String url ="jdbc:mysql://localhost:3306/project";
@@ -14,6 +64,8 @@ class ConnectionFactory {
         return DriverManager.getConnection(url,uname,password);
     }
 }
+
+
 
 public class Main {
 
@@ -63,8 +115,6 @@ public class Main {
                     printHelp();
                     break;
             }
-
-
-            con.close();
+        con.close();
     }
 }
