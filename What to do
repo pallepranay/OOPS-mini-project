@@ -2,7 +2,7 @@
 
 [DONE] 1) classes for Customer , Cars , rental table. Cars class being abstract.
 
-2) function to take input data from user and insert into Customer table, providing user with a unique Cust_id
+[DONE] 2) function to take input data from user and insert into Customer table, providing user with a unique Cust_id
     input format in cmd line will be   ->  java Main -register <name> <address> <mobile no>
 
 2) Function to make a booking using Cust_id, Car_no.,start (date), end (date) 
