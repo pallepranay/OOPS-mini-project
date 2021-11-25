@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
+import java.util.Objects;
 import java.util.Scanner;
 abstract class car{
     String car_no;
@@ -105,11 +106,53 @@ public class Main {
         System.out.println("-b <recordType> <string> for operation on <recordType> and search <string>");
         System.out.println("-h (or any) for help menu");
     }
+
+    public static void register(String[] args) throws SQLException, ClassNotFoundException, IOException {
+        Connection con = ConnectionFactory.createConnection();
+        Statement st = con.createStatement();
+        Statement st2 = con.createStatement();
+        String query = "select max(cust_id) from customer;";
+        String query2 = "select * from customer;";
+
+        ResultSet rs = st.executeQuery(query);
+        ResultSet rs2 = st2.executeQuery(query2);
+
+        rs.next();
+        int maxId = rs.getInt("max(cust_id)");
+        int valid =0;
+        while(rs2.next()){
+            String name= rs2.getString("name");
+            String phoneNo= rs2.getString("phone_no");
+            if(Objects.equals(args[1], name) && Objects.equals(args[3], phoneNo)){
+                System.out.println("User is already registered ! ");
+                valid = 0;
+                break;
+            }
+            else{
+                valid=1;
+            }
+        }
+        if(valid ==1){
+            PreparedStatement ps = con.prepareStatement("insert into customer(cust_id, name,address,phone_no) values(?,?,?,?)");
+            ps.setInt(1, maxId+1);
+            ps.setString(2, args[1]);
+            ps.setString(3, args[2]);
+            ps.setString(4, args[3]);
+            ps.executeUpdate();
+            System.out.println("Registration done !");
+
+            st.close();
+        }
+    }
+
     public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
         Connection con = ConnectionFactory.createConnection();
             switch (args[0]) {
                 case "-initialize":
                     initialize(args);
+                    break;
+                case "-register":
+                    register(args);
                     break;
                 default:
                     printHelp();
