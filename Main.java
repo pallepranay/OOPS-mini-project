@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Scanner;
 abstract class car{
@@ -56,6 +57,7 @@ class rental{
         this.end = end;
     }
 }
+
 class ConnectionFactory {
     public static Connection createConnection() throws ClassNotFoundException, SQLException {
         String url ="jdbc:mysql://localhost:3306/project";
@@ -67,10 +69,9 @@ class ConnectionFactory {
 }
 
 
-
 public class Main {
 
-    public static void initialize(String[] args) throws SQLException, ClassNotFoundException, IOException {
+    public static void initialize() throws SQLException, ClassNotFoundException, IOException {
         try {
             Connection con = ConnectionFactory.createConnection();
             Statement st = con.createStatement();
@@ -145,14 +146,76 @@ public class Main {
         }
     }
 
+    public static void booking(String[] args) throws SQLException, ClassNotFoundException, IOException {
+        Connection con = ConnectionFactory.createConnection();
+        Statement st3 = con.createStatement();
+        Statement st4 = con.createStatement();
+        Statement st5 = con.createStatement();
+
+        String query3 = "select max(cust_id) from customer;";
+        String query4 = "select * from rental;";
+        String query5 = "select * from cars;";
+
+        ResultSet rs3 = st3.executeQuery(query3);
+        ResultSet rs4 = st4.executeQuery(query4);
+        ResultSet rs5 = st5.executeQuery(query5);
+
+        rs3.next();
+        int maxId = rs3.getInt("max(cust_id)");
+        int valid = 1;
+        int good =0;
+        int x= Integer.parseInt(args[1]);
+        while(rs5.next()){
+            String car_no = rs5.getString("car_no");
+            if(x<maxId && car_no.equals(args[2])){
+                good =1;
+                break;
+            }
+        }
+        if(good == 1){
+            while (rs4.next()) {
+                String car_no = rs4.getString("car_no");
+                Date start = rs4.getDate("start");
+                Date end = rs4.getDate("end");
+                if (car_no.equals(args[2])) {
+                    System.out.println("Sorry, Car is not available(booked)");
+                    valid = 0;
+                    break;
+                } else {
+                    valid = 1;
+                }
+            }
+            if (valid == 1) {
+                PreparedStatement ps1 = con.prepareStatement("insert into rental(cust_id, car_no,start,end) values(?,?,?,?)");
+
+                ps1.setInt(1, x);
+                ps1.setString(2, args[2]);
+                ps1.setString(3, args[3]);
+                ps1.setString(4, args[4]);
+                ps1.executeUpdate();
+                System.out.println("Car Booked");
+
+                st3.close();
+            }
+        }
+        else{
+            System.out.println("[INVALID] \ncustomer Id or Car number is wrong ! you seems sus ");
+        }
+
+    }
+
+
     public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
         Connection con = ConnectionFactory.createConnection();
             switch (args[0]) {
                 case "-initialize":
-                    initialize(args);
+                    initialize();
                     break;
                 case "-register":
                     register(args);
+                    break;
+                case "-booking":
+                    booking(args);
                     break;
                 default:
                     printHelp();
