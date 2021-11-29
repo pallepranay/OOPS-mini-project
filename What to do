@@ -11,7 +11,7 @@
 2) Function to cancel booking using Cust_id and Car_no. 
     input format in cmd line will be   ->  java Main -cancel <Cust_id> <Car_no>
     
-3) Function to search and print Customer data using first name.
+[satvik doing this part]3) Function to search and print Customer data using first name.
     input format in cmd line will be   ->  java Main -searchFirstName <FirstName>
     
 4) Function to find available cars with Charges less than a certain amount. 
