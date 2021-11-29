@@ -1,28 +1,26 @@
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.*;
-import java.util.Date;
 import java.util.Objects;
 import java.util.Scanner;
 abstract class car{
     String car_no;
     String model;
-    int avalability;
+    int availability;
     int charges;
 
-    public car(String car_no, String model, int avalability, int charges) {
+    public car(String car_no, String model, int availability, int charges) {
         this.car_no = car_no;
         this.model = model;
-        this.avalability = avalability;
+        this.availability = availability;
         this.charges = charges;
     }
     public abstract void discount();
 }
 class discountCar extends car{
-    public discountCar(String car_no, String model, int avalability, int charges) {
-        super(car_no, model, avalability, charges);
+    public discountCar(String car_no, String model, int availability, int charges) {
+        super(car_no, model, availability, charges);
     }
 
     public void discount(){
@@ -57,7 +55,6 @@ class rental{
         this.end = end;
     }
 }
-
 class ConnectionFactory {
     public static Connection createConnection() throws ClassNotFoundException, SQLException {
         String url ="jdbc:mysql://localhost:3306/project";
@@ -68,10 +65,8 @@ class ConnectionFactory {
     }
 }
 
-
 public class Main {
-
-    public static void initialize() throws SQLException, ClassNotFoundException, IOException {
+    public static void initialize() {
         try {
             Connection con = ConnectionFactory.createConnection();
             Statement st = con.createStatement();
@@ -81,7 +76,7 @@ public class Main {
             st.execute(query);
             st.execute(query2);
             st.execute(query3);
-            String file = "src\\carData.csv";
+            String file = "carData.csv";
             Scanner sin = new Scanner(new BufferedReader(new FileReader(file)));
             String str = "";
             while (sin.hasNext()) {
@@ -95,10 +90,10 @@ public class Main {
                 ps.executeUpdate();
                 st.close();
             }
-            System.out.println("Program intialised! tables have been made !");
+            System.out.println("Program initialised! tables have been made !");
         }
         catch (Exception e){
-            System.out.println("Program have already been intialised!");
+            System.out.println("Program have already been initialised!");
         }
         }
     public static void printHelp(){
@@ -120,20 +115,17 @@ public class Main {
 
         rs.next();
         int maxId = rs.getInt("max(cust_id)");
-        int valid =0;
+        int valid = 1;
         while(rs2.next()){
-            String name= rs2.getString("name");
-            String phoneNo= rs2.getString("phone_no");
+            String name = rs2.getString("name");
+            String phoneNo = rs2.getString("phone_no");
             if(Objects.equals(args[1], name) && Objects.equals(args[3], phoneNo)){
                 System.out.println("User is already registered ! ");
                 valid = 0;
                 break;
             }
-            else{
-                valid=1;
-            }
         }
-        if(valid ==1){
+        if(valid == 1){
             PreparedStatement ps = con.prepareStatement("insert into customer(cust_id, name,address,phone_no) values(?,?,?,?)");
             ps.setInt(1, maxId+1);
             ps.setString(2, args[1]);
@@ -141,11 +133,9 @@ public class Main {
             ps.setString(4, args[3]);
             ps.executeUpdate();
             System.out.println("Registration done !");
-
             st.close();
         }
     }
-
     public static void booking(String[] args) throws SQLException, ClassNotFoundException, IOException {
         Connection con = ConnectionFactory.createConnection();
         Statement st3 = con.createStatement();
@@ -203,24 +193,55 @@ public class Main {
         }
 
     }
-
-
-    public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
+    public static void searchFirstName(String[] args) throws Exception{
         Connection con = ConnectionFactory.createConnection();
+        String query = "select * from customer ;";
+        PreparedStatement stmt = con.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery(query);
+        while(rs.next()) {
+            String name = rs.getString("name");
+            if(Objects.equals(args[1], name)){
+                System.out.println("Customer found");
+                System.out.println(" cust_id:"+rs.getInt("cust_id")+ "\n name:" +rs.getString("name") +"\n address:" +rs.getString("address") + "\n ph_no:" +rs.getString("phone_no"));
+                return;
+            }
+        }
+        System.out.println("Customer with that first name is not found");
+    }
+
+    public static void main(String[] args){
             switch (args[0]) {
                 case "-initialize":
                     initialize();
                     break;
                 case "-register":
-                    register(args);
+                    try {
+                        register(args);
+                    }
+                    catch(Exception a){
+                        a.printStackTrace();
+                    }
                     break;
                 case "-booking":
-                    booking(args);
+                    try{
+                        booking(args);
+                    }
+                    catch (Exception a){
+                        a.printStackTrace();
+                    }
                     break;
+                case "-searchFirstName":
+                    try{
+                        searchFirstName(args);
+                    }
+                catch (Exception a){
+                    a.printStackTrace();
+                    }
+                break;
                 default:
                     printHelp();
                     break;
             }
-        con.close();
     }
 }
+
