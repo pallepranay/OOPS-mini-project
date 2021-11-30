@@ -5,13 +5,13 @@
 [DONE] 2) function to take input data from user and insert into Customer table, providing user with a unique Cust_id
     input format in cmd line will be   ->  java Main -register <name> <address> <mobile no>
 
-2) Function to make a booking using Cust_id, Car_no.,start (date), end (date) 
+[DONE] 2) Function to make a booking using Cust_id, Car_no.,start (date), end (date) 
     input format in cmd line will be   ->  java Main -cancel <Cust_id> <Car_no> <start> <end>
 
 2) Function to cancel booking using Cust_id and Car_no. 
     input format in cmd line will be   ->  java Main -cancel <Cust_id> <Car_no>
     
-[satvik doing this part]3) Function to search and print Customer data using first name.
+[DONE] 3) Function to search and print Customer data using first name.
     input format in cmd line will be   ->  java Main -searchFirstName <FirstName>
     
 4) Function to find available cars with Charges less than a certain amount. 
