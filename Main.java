@@ -95,7 +95,7 @@ public class Main {
         catch (Exception e){
             System.out.println("Program have already been initialised!");
         }
-        }
+    }
     public static void printHelp(){
         System.out.println("Help for commands:");
         System.out.println("-initialize for initializing the program");
@@ -198,50 +198,86 @@ public class Main {
         String query = "select * from customer ;";
         PreparedStatement stmt = con.prepareStatement(query);
         ResultSet rs = stmt.executeQuery(query);
+        int valid=0;
         while(rs.next()) {
             String name = rs.getString("name");
             if(Objects.equals(args[1], name)){
                 System.out.println("Customer found");
                 System.out.println(" cust_id:"+rs.getInt("cust_id")+ "\n name:" +rs.getString("name") +"\n address:" +rs.getString("address") + "\n ph_no:" +rs.getString("phone_no"));
-                return;
+                valid=1;
             }
         }
-        System.out.println("Customer with that first name is not found");
+        if(valid ==0){
+            System.out.println("Customer with that first name is not found");
+        }
+
+    }
+
+    public static void carAmountLessThan(String[] args) throws Exception{
+        Connection con = ConnectionFactory.createConnection();
+        String query = "select * from cars";
+        PreparedStatement stmt = con.prepareStatement(query);
+        ResultSet rs = stmt.executeQuery(query);
+        int found=0;
+        while(rs.next()){
+            int charges = rs.getInt("charges");
+            int prop_amount = Integer.parseInt(String.valueOf(args[1]));
+            int k = Integer.compare(prop_amount, charges);
+
+            if(k>0)
+            {
+                System.out.println("Cars are found !!!");
+                System.out.println(" car_no:"+rs.getString("car_no")+ "\n Model:" +rs.getString("model") +"\n Availability:" +rs.getInt("availability")+"\n Price:" +rs.getInt("charges"));
+                found=1;
+            }
+        }
+        if(found ==0 ){
+            System.out.println("Cars are not not available for renting with the proposed amount");
+        }
+
     }
 
     public static void main(String[] args){
-            switch (args[0]) {
-                case "-initialize":
-                    initialize();
-                    break;
-                case "-register":
-                    try {
-                        register(args);
-                    }
-                    catch(Exception a){
-                        a.printStackTrace();
-                    }
-                    break;
-                case "-booking":
-                    try{
-                        booking(args);
-                    }
-                    catch (Exception a){
-                        a.printStackTrace();
-                    }
-                    break;
-                case "-searchFirstName":
-                    try{
-                        searchFirstName(args);
-                    }
+        switch (args[0]) {
+            case "-initialize":
+                initialize();
+                break;
+            case "-register":
+                try {
+                    register(args);
+                }
+                catch(Exception a){
+                    a.printStackTrace();
+                }
+                break;
+            case "-booking":
+                try{
+                    booking(args);
+                }
                 catch (Exception a){
                     a.printStackTrace();
-                    }
+                }
                 break;
-                default:
-                    printHelp();
-                    break;
-            }
+            case "-searchFirstName":
+                try{
+                    searchFirstName(args);
+                }
+                catch (Exception a){
+                    a.printStackTrace();
+                }
+                break;
+            case "-carAmountLessThan":
+                try{
+                    carAmountLessThan(args);
+                }
+                catch (Exception a){
+                    a.printStackTrace();
+                }
+                break;
+            default:
+                printHelp();
+                break;
+        }
     }
 }
 
