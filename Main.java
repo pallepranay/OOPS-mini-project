@@ -212,31 +212,29 @@ public class Main {
         }
 
     }
-
     public static void carAmountLessThan(String[] args) throws Exception{
         Connection con = ConnectionFactory.createConnection();
         String query = "select * from cars";
         PreparedStatement stmt = con.prepareStatement(query);
         ResultSet rs = stmt.executeQuery(query);
         int found=0;
+        System.out.println("\n  <<< Checking Cars With proposed amount " + args[1] +"/- >>>");
         while(rs.next()){
             int charges = rs.getInt("charges");
             int prop_amount = Integer.parseInt(String.valueOf(args[1]));
             int k = Integer.compare(prop_amount, charges);
-
             if(k>0)
             {
-                System.out.println("Cars are found !!!");
-                System.out.println(" car_no:"+rs.getString("car_no")+ "\n Model:" +rs.getString("model") +"\n Availability:" +rs.getInt("availability")+"\n Price:" +rs.getInt("charges"));
+                System.out.println("----------------------------------------------");
+                System.out.println(" car_no:"+rs.getString("car_no")+ "\t Model:" +rs.getString("model") +"\n Availability:" +rs.getInt("availability")+"\t Price:" +rs.getInt("charges"));
                 found=1;
             }
         }
         if(found ==0 ){
-            System.out.println("Cars are not not available for renting with the proposed amount");
+            System.out.println("Sorry!! Cars are not not available for renting with the proposed amount.");
         }
 
     }
-
     public static void main(String[] args){
         switch (args[0]) {
             case "-initialize":
@@ -280,4 +278,3 @@ public class Main {
         }
     }
 }
-
