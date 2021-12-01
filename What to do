@@ -14,7 +14,7 @@
 [Done] 3) Function to search and print Customer data using first name.
     input format in cmd line will be   ->  java Main -searchFirstName <FirstName>
     
-4) Function to find available cars with Charges less than a certain amount. 
+[Done] 4) Function to find available cars with Charges less than a certain amount. 
   For example, if the user want to find avaible cars for renting which price is less that 1000 rs. per day
     input format in cmd line will be   ->  java Main -searchLessThanAmount <Amount>
     
